@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAFA SAA 2026 | 综合视界系统 (2D矩阵生成 & 3D空间交互)</title>
     
-    <!-- 引入基础库 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Three.js Import Map -->
     <script type="importmap">
         {
             "imports": {
@@ -20,7 +18,6 @@
             }
         }
     </script>
-    <!-- MediaPipe -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
@@ -154,13 +151,10 @@
 </head>
 <body class="h-[100dvh] w-full overflow-hidden m-0 relative bg-[#4C4C4C]">
 
-    <!-- 底层深邃宇宙漂浮层 (视觉单体背景) -->
     <canvas id="globalBgCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-[-1]"></canvas>
 
-    <!-- 顶部统一导航 (Header) -->
     <header id="main-header" class="absolute top-0 left-0 w-full h-[60px] glass-panel border-b border-white/[0.08] px-6 flex items-center justify-between z-50 transition-colors duration-500">
         <div class="max-w-[1920px] w-full mx-auto flex items-center justify-between">
-            <!-- Logo 区 (增加点击返回首页逻辑) -->
             <div class="flex items-center gap-3 w-1/4 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.switchSystemModule('home')" title="返回首页">
                 <svg viewBox="0 0 100 100" class="w-8 h-8 drop-shadow-lg" xmlns="http://www.w3.org/2000/svg">
                     <path d="M 75 50 Q 95 45 85 30 Q 82 45 70 45 Z" fill="#fc5420" />
@@ -177,7 +171,6 @@
                 </h1>
             </div>
             
-            <!-- 模块切换分段控制器 (扩展为三段式) -->
             <div class="flex-1 flex justify-center">
                 <div class="relative glass-inner p-1 rounded-full flex items-center w-[480px]">
                     <div id="navSlider" class="absolute left-1 top-1 bottom-1 w-[calc(25%-2px)] glass-active-slider rounded-full transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"></div>
@@ -201,9 +194,7 @@
                 </div>
             </div>
 
-            <!-- 全局操作区 (根据模块显示对应按钮) -->
             <div class="flex items-center justify-end gap-3 w-1/4">
-                <!-- 首页 (Home) 专属跳转按钮 -->
                 <div id="home_action_wrapper" class="">
                     <a href="https://gafa-saa.github.io/SAA-2026-In-Between-Graduate-sj/" target="_blank" class="px-4 py-1.5 glass-inner hover:bg-white/10 text-white rounded-full text-sm font-medium transition-all flex items-center gap-2 active:scale-95 shadow-lg border border-white/20">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
@@ -211,7 +202,6 @@
                     </a>
                 </div>
 
-                <!-- App1 (2D) 专属按钮 -->
                 <div id="a1_action_wrapper" class="hidden">
                     <button id="a1_mainActionBtn" class="hidden px-4 py-1.5 glass-inner hover:bg-white/10 text-white rounded-full text-sm font-medium transition-all flex items-center gap-2 active:scale-95">
                         <svg id="a1_btnIconDownload" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -221,7 +211,6 @@
                     </button>
                 </div>
                 
-                <!-- App2 (3D) 专属按钮 -->
                 <div id="a2_action_wrapper" class="hidden">
                     <button id="a2_fullscreenBtn" class="px-4 py-1.5 glass-inner hover:bg-white/10 text-zinc-100 hover:text-white rounded-full text-sm font-medium transition-all flex items-center gap-2 active:scale-95">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
@@ -229,7 +218,6 @@
                     </button>
                 </div>
 
-                <!-- App3 (Poster) 专属按钮 -->
                 <div id="a3_action_wrapper" class="hidden">
                     <button id="a3_fullscreenBtn" class="px-4 py-1.5 bg-[#4C4C4C]/5 hover:bg-[#4C4C4C]/10 text-[#4C4C4C] border border-[#4C4C4C]/20 rounded-full text-sm font-medium transition-all flex items-center gap-2 active:scale-95 shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
@@ -240,15 +228,10 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="absolute inset-0 w-full h-full overflow-hidden z-10">
 
-        <!-- ========================================== -->
-        <!-- APP 0: 首页 (Landing Page)                  -->
-        <!-- ========================================== -->
         <div id="module-home" class="absolute inset-0 w-full h-full flex flex-col items-center justify-start bg-transparent z-30 pt-[100px] md:pt-[12vh] pb-24 overflow-y-auto overflow-x-hidden custom-scrollbar">
             
-            <!-- 居中主视觉文案 -->
             <div class="text-center mb-12 md:mb-16 fade-in-up w-full px-4 shrink-0">
                 <h1 class="text-5xl md:text-[5.5rem] font-bold text-white tracking-tighter mb-4 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)] leading-tight">
                     GAFA SAA <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-fuchsia-400 to-emerald-400">2026</span>
@@ -258,13 +241,10 @@
                 </p>
             </div>
 
-            <!-- 交互卡片入口 -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-[1400px] px-6 lg:px-8 pb-12 perspective-container shrink-0">
                 
-                <!-- 卡片 1: 2D Matrix Studio -->
                 <div onclick="window.switchSystemModule('2d')" class="tilt-card cursor-pointer group">
                     <div class="h-full glass-panel rounded-3xl p-10 hover:bg-white/[0.08] transition-colors border border-white/[0.08] group-hover:border-white/[0.2] shadow-2xl overflow-hidden relative">
-                        <!-- 卡片内部悬浮层 -->
                         <div class="tilt-card-inner flex flex-col h-full relative z-10 pointer-events-none">
                             <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_10px_20px_rgba(37,98,233,0.3)] mb-8">
                                 <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -275,12 +255,10 @@
                                 将图像、视频源与实时摄像头捕捉到的物理环境，无缝解析并转化为参数化的动态色彩矩阵。一键导出高清矢量与 4K 超清视频流。
                             </p>
                         </div>
-                        <!-- 装饰性光效 -->
                         <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                     </div>
                 </div>
 
-                <!-- 卡片 2: 3D Interactive -->
                 <div onclick="window.switchSystemModule('3d')" class="tilt-card flex-1 cursor-pointer group delay-100">
                     <div class="h-full glass-panel rounded-3xl p-10 hover:bg-white/[0.08] transition-colors border border-white/[0.08] group-hover:border-white/[0.2] shadow-2xl overflow-hidden relative">
                         <div class="tilt-card-inner flex flex-col h-full relative z-10 pointer-events-none">
@@ -297,7 +275,6 @@
                     </div>
                 </div>
 
-                <!-- 卡片 3: Interactive Poster -->
                 <div onclick="window.switchSystemModule('poster')" class="tilt-card cursor-pointer group delay-200">
                     <div class="h-full glass-panel rounded-3xl p-10 hover:bg-white/[0.08] transition-colors border border-white/[0.08] group-hover:border-white/[0.2] shadow-2xl overflow-hidden relative">
                         <div class="tilt-card-inner flex flex-col h-full relative z-10 pointer-events-none">
@@ -318,14 +295,9 @@
         </div>
 
         
-        <!-- ========================================== -->
-        <!-- APP 1: 2D 矩阵生成器 (Matrix Studio)        -->
-        <!-- ========================================== -->
         <div id="module-2d" class="absolute top-[60px] left-0 w-full h-[calc(100%-60px)] flex flex-col md:flex-row bg-transparent hidden">
-            <!-- 左侧属性面板 -->
             <aside id="a1_sidebar" class="w-full md:w-80 h-auto md:h-full glass-panel border-r border-white/[0.08] flex flex-col flex-none overflow-y-auto custom-scrollbar z-20">
                 <div class="p-5 flex flex-col gap-5">
-                    <!-- 模式切换 Tabs -->
                     <div class="relative glass-inner p-1 rounded-lg flex items-center mb-1">
                         <div id="a1_tabSlider" class="absolute left-1 top-1 bottom-1 w-[calc(25%-2px)] glass-active-slider rounded-md transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"></div>
                         <button id="a1_tabCamera" class="relative z-10 flex-1 py-1.5 text-xs rounded-md transition-colors duration-300 text-white font-semibold flex items-center justify-center active:scale-95">实时</button>
@@ -334,9 +306,7 @@
                         <button id="a1_tabBatch" class="relative z-10 flex-1 py-1.5 text-xs rounded-md transition-colors duration-300 text-zinc-400 hover:text-white font-normal flex items-center justify-center active:scale-95">批量</button>
                     </div>
 
-                    <!-- 动态容器区 -->
                     <div class="relative min-h-[140px] flex flex-col">
-                        <!-- 1. 上传单张图片区域 -->
                         <div id="a1_uploadArea" class="hidden absolute inset-0 group glass-inner hover:bg-white/[0.05] hover:border-white/[0.1] rounded-xl p-4 text-center cursor-pointer overflow-hidden flex flex-col items-center justify-center z-10 border-dashed">
                             <input type="file" id="a1_imageInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
                             <div class="flex flex-col items-center gap-1.5 transition-transform group-hover:scale-105">
@@ -348,7 +318,6 @@
                             </div>
                         </div>
 
-                        <!-- 2. 批量文件夹上传区域 -->
                         <div id="a1_batchArea" class="hidden absolute inset-0 flex flex-col h-[140px]">
                             <div id="a1_batchUploadState" class="flex-1 group glass-inner hover:bg-white/[0.05] hover:border-white/[0.1] rounded-xl p-4 text-center cursor-pointer border-dashed overflow-hidden flex flex-col items-center justify-center relative">
                                 <input type="file" id="a1_folderInput" webkitdirectory directory multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
@@ -372,7 +341,6 @@
                             </div>
                         </div>
 
-                        <!-- 3. 上传视频区域 -->
                         <div id="a1_videoUploadArea" class="hidden absolute inset-0 group glass-inner hover:bg-white/[0.05] hover:border-white/[0.1] rounded-xl p-4 text-center cursor-pointer border-dashed overflow-hidden flex flex-col items-center justify-center z-10">
                             <input type="file" id="a1_videoInput" accept="video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
                             <div class="flex flex-col items-center gap-1.5 transition-transform group-hover:scale-105">
@@ -384,7 +352,6 @@
                             </div>
                         </div>
 
-                        <!-- 4. 摄像头交互区域 -->
                         <div id="a1_cameraArea" class="absolute inset-0 z-10 glass-inner border-solid rounded-xl p-4 text-center overflow-hidden flex flex-col items-center justify-center">
                             <button id="a1_startCamBtn" class="px-5 py-2.5 glass-active-slider hover:bg-white/[0.2] text-white rounded-lg text-xs font-medium transition-all flex items-center gap-2 active:scale-95 shadow-lg">
                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -419,7 +386,6 @@
 
                     <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-                    <!-- 参数控制区 -->
                     <div class="flex flex-col gap-6 transition-opacity duration-500" id="a1_controls" style="opacity: 0.2; pointer-events: none;">
                         <div id="a1_batchParamHint" class="hidden -mb-4 bg-blue-500/10 border border-blue-400/20 rounded-lg px-3 py-2 flex items-center gap-2 backdrop-blur-md">
                             <svg class="w-3.5 h-3.5 text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -503,7 +469,6 @@
                 </div>
             </aside>
 
-            <!-- 画布工作区 -->
             <div class="flex-1 relative flex flex-col workspace-bg overflow-hidden z-10">
                 <div id="a1_placeholder" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 transition-opacity duration-500">
                     <div class="w-20 h-20 glass-panel rounded-full flex items-center justify-center mb-5 shadow-2xl">
@@ -513,37 +478,28 @@
                     <p class="text-[10px] text-zinc-400 mt-1 uppercase font-sans tracking-widest">Select media or start camera</p>
                 </div>
                 <div class="w-full h-full overflow-auto flex items-center justify-center p-8 md:p-12 relative">
-                    <!-- 使用 object-contain 自适应贴合外框 -->
                     <canvas id="a1_artCanvas" class="w-full h-full object-contain shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-700 opacity-0 bg-transparent rounded-sm"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- APP 2: 3D 空间交互引擎 (Interactive)        -->
-        <!-- ========================================== -->
         <div id="module-3d" class="absolute inset-0 w-full h-full bg-transparent hidden">
             
-            <!-- 3D 主渲染区 (铺满整个底层，在侧边栏下方) -->
             <div id="a2_workspace" class="absolute inset-0 w-full h-full bg-transparent overflow-hidden z-10">
                 <div id="a2_loadingOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-xl z-30 flex flex-col items-center justify-center transition-opacity duration-500 hidden">
                     <div class="loader-ring mb-4"></div>
                     <p class="text-sm text-white font-medium tracking-widest uppercase drop-shadow-md">Initializing Engine</p>
                     <p class="text-xs text-zinc-300 mt-1" id="a2_loadingText">加载模型与请求视觉权限...</p>
                 </div>
-                <!-- ThreeJS 容器 -->
                 <div id="a2_three-canvas-container" class="w-full h-full absolute inset-0 z-10"></div>
-                <!-- 退出沉浸模式按钮 -->
                 <button id="a2_exitImmersiveBtn" class="fixed top-8 right-8 z-[9999] glass-panel hover:bg-white/10 px-5 py-2.5 rounded-full text-white border border-white/20 flex items-center gap-2 shadow-2xl active:scale-95">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
                     <span class="text-sm font-medium tracking-wide">退出沉浸</span>
                 </button>
             </div>
 
-            <!-- 左侧属性面板 (绝对定位浮层) -->
             <aside id="a2_sidebar" class="absolute left-0 top-0 h-full w-80 glass-panel border-r border-white/[0.08] flex flex-col flex-none overflow-y-auto custom-scrollbar z-40 pt-[60px]">
                 <div class="p-6 flex flex-col gap-8">
-                    <!-- 模块：摄像头控制 -->
                     <div class="space-y-3">
                         <label class="block text-sm font-semibold text-white drop-shadow-md">传感器接入 <span class="ml-1 text-zinc-400 font-normal uppercase text-[10px] font-sans tracking-widest">Sensor</span></label>
                         <div id="a2_cameraContainer" class="glass-inner rounded-xl overflow-hidden relative flex flex-col items-center justify-center transition-colors min-h-[160px] h-[240px] resize-y w-full">
@@ -570,14 +526,12 @@
 
                     <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-                    <!-- 模块：主题选择 (升级为自定义玻璃浮层 Dropdown) -->
                     <div class="space-y-3">
                         <label class="block text-sm font-semibold text-white drop-shadow-md flex justify-between items-end">
                             <span>视觉单元主题 <span class="ml-1 text-zinc-400 font-normal uppercase text-[10px] font-sans tracking-widest">Theme</span></span>
                             <span id="a2_modeBadge" class="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase tracking-wider hidden backdrop-blur-md shadow-[0_0_10px_rgba(244,63,94,0.2)]">Morphing</span>
                         </label>
                         <div class="flex gap-2 relative">
-                            <!-- 自定义的高级下拉选择框 (替换为带强力遮挡效果的 glass-dropdown 材质) -->
                             <div class="relative flex-1">
                                 <button id="a2_themeSelectorBtn" class="w-full glass-inner text-white text-sm rounded-lg py-2.5 pl-4 pr-10 transition-colors shadow-sm flex items-center justify-between active:scale-95 text-left">
                                     <span id="a2_themeSelectorLabel" class="truncate">00 概念字符</span>
@@ -585,8 +539,7 @@
                                 </button>
                                 <div id="a2_themeDropdown" class="absolute left-0 right-0 top-full mt-2 glass-dropdown rounded-lg z-50 opacity-0 pointer-events-none transition-all duration-200 transform -translate-y-2 max-h-[240px] flex flex-col">
                                     <div id="a2_themeOptions" class="overflow-y-auto custom-scrollbar flex-1 p-1.5 flex flex-col gap-0.5">
-                                        <!-- 下拉选项由JS生成 -->
-                                    </div>
+                                        </div>
                                 </div>
                             </div>
                             
@@ -605,7 +558,6 @@
 
                     <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-                    <!-- 模块：操作指南 -->
                     <div class="space-y-4">
                         <label class="block text-sm font-semibold text-white drop-shadow-md">交互手势指南 <span class="ml-1 text-zinc-400 font-normal uppercase text-[10px] font-sans tracking-widest">Gestures</span></label>
                         <div class="glass-inner p-3 rounded-lg flex items-start gap-3">
@@ -660,24 +612,17 @@
             </aside>
         </div>
 
-        <!-- ========================================== -->
-        <!-- APP 3: 交互海报 (In-Between Poster)         -->
-        <!-- ========================================== -->
         <div id="module-poster" class="absolute inset-0 w-full h-full bg-transparent hidden z-10">
-            <!-- 渲染画布工作区 -->
             <div id="a3_workspace" class="absolute inset-0 w-full h-full bg-[#E3E2E2] overflow-hidden z-10 transition-colors duration-500">
                 <canvas id="a3_canvas" class="absolute inset-0 w-full h-full z-0 touch-none cursor-grab active:cursor-grabbing"></canvas>
-                <!-- 退出沉浸模式按钮 -->
                 <button id="a3_exitImmersiveBtn" class="fixed top-8 right-8 z-[9999] bg-white/40 backdrop-blur-md hover:bg-white/60 px-5 py-2.5 rounded-full text-[#4C4C4C] border border-[#4C4C4C]/20 flex items-center gap-2 shadow-lg active:scale-95 transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
                     <span class="text-sm font-medium tracking-wide">退出沉浸</span>
                 </button>
             </div>
 
-            <!-- 左侧属性面板 -->
             <aside id="a3_sidebar" class="absolute left-0 top-0 h-full w-80 bg-[#E3E2E2]/70 backdrop-blur-[24px] saturate-[130%] border-r border-[#4C4C4C]/10 flex flex-col flex-none overflow-y-auto custom-scrollbar z-40 pt-[60px] shadow-[8px_0_32px_rgba(0,0,0,0.05)]">
                 <div class="p-6 flex flex-col gap-8">
-                    <!-- 参数控制 -->
                     <div class="space-y-6">
                         <label class="block text-sm font-semibold text-[#4C4C4C] drop-shadow-sm">海报参数 <span class="ml-1 text-[#4C4C4C]/60 font-normal uppercase text-[10px] font-sans tracking-widest">Parameters</span></label>
                         
@@ -700,7 +645,6 @@
 
                     <div class="h-px w-full bg-gradient-to-r from-transparent via-[#4C4C4C]/10 to-transparent"></div>
 
-                    <!-- 玩法说明 -->
                     <div class="space-y-4">
                         <label class="block text-sm font-semibold text-[#4C4C4C] drop-shadow-sm">交互操作指南 <span class="ml-1 text-[#4C4C4C]/60 font-normal uppercase text-[10px] font-sans tracking-widest">Guide</span></label>
                         
@@ -742,9 +686,6 @@
 
     </main>
 
-    <!-- ========================================== -->
-    <!-- 全局数据与系统控制逻辑 (Global Hook)        -->
-    <!-- ========================================== -->
     <script>
         // 核心视觉配置共享数据 (包含00加上全新的11个单体)
         window.GAFA_DATA = {
@@ -1033,9 +974,6 @@
         });
     </script>
 
-    <!-- ========================================== -->
-    <!-- APP 1: 2D 矩阵生成器 JS 原生逻辑隔离        -->
-    <!-- ========================================== -->
     <script>
         (function() {
             // --- 强制五色配置 ---
@@ -1701,9 +1639,6 @@
         })();
     </script>
 
-    <!-- ========================================== -->
-    <!-- APP 2: 3D 空间交互引擎 JS 逻辑               -->
-    <!-- ========================================== -->
     <script type="module">
         import * as THREE from 'three';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -2164,7 +2099,7 @@
         }
 
         // 自动轮播控制逻辑
-        let autoPlayTimeout; const AUTO_PLAY_DELAY = 8000;
+        let autoPlayTimeout; const AUTO_PLAY_DELAY = 13000;
         function resetAutoPlayTimer() {
             clearTimeout(autoPlayTimeout);
             autoPlayTimeout = setTimeout(autoPlayNext, AUTO_PLAY_DELAY);
@@ -2568,9 +2503,6 @@
         buildSingleScene(0); resetAutoPlayTimer(); animate();
     </script>
 
-    <!-- ========================================== -->
-    <!-- APP 3: 交互海报引擎 JS 逻辑 (重构为 Vanilla JS) -->
-    <!-- ========================================== -->
     <script>
         (function() {
             const canvas = document.getElementById('a3_canvas');
